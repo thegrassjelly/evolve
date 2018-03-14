@@ -6,8 +6,9 @@ using System.Web.Services;
 
 public partial class Admin_Membership_Add : System.Web.UI.Page
 {
-    public static decimal RegRate;
-    public static decimal StudRate;
+    static decimal _regRate;
+    static decimal _studRate;
+
     protected void Page_Load(object sender, EventArgs e)
     {
         Helper.ValidateAdmin();
@@ -85,7 +86,6 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
                     }
                 }
             }
-
             CheckMembershipStatus();
             txtORNo.Text = "";
         }
@@ -100,9 +100,9 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
             cmd.Connection = con;
             cmd.CommandText = @"SELECT MembershipID FROM Memberships 
                                 WHERE UserID = @id AND
-                                MembershipStart < @datenow AND MembershipEnd > @datenow";
+                                MembershipEnd > @datenow";
             cmd.Parameters.AddWithValue("@id", hfName.Value);
-            cmd.Parameters.AddWithValue("@datenow", DateTime.Now);
+            cmd.Parameters.AddWithValue("@datenow", Helper.PHTime());
             using (var dr = cmd.ExecuteReader())
             {
                 if (dr.HasRows)
@@ -134,7 +134,7 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
             cmd.CommandText = @"SELECT MembershipStart, MembershipEnd,
                                 MembershipSpan, MembershipType, DateAdded FROM Memberships
                                 WHERE UserID = @id AND
-                                MembershipStart < @datenow AND MembershipEnd > @datenow";
+                                MembershipEnd > @datenow";
             cmd.Parameters.AddWithValue("@id", hfName.Value);
             cmd.Parameters.AddWithValue("@datenow", Helper.PHTime());
             using (SqlDataReader dr = cmd.ExecuteReader())
@@ -149,8 +149,7 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
                     txtMembershipLength.Text = dr["MembershipSpan"].ToString();
                     txtMembershipType2.Text = dr["MembershipType"].ToString();
 
-                    if (sDate < DateTime.Now &&
-                        eDate > DateTime.Now)
+                    if (eDate > Helper.PHTime())
                     {
                         memInactive.Visible = false;
                         memActive.Visible = true;
@@ -176,12 +175,24 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
             btnAdd.Visible = false;
             ddlRate.Attributes.Add("disabled", "true");
             txtORNo.Attributes.Add("disabled", "true");
+            txtSDate.Attributes.Add("disabled", "true");
+            //btnAddCurrent.Visible = false;
+            //ddlRate2.Attributes.Add("disabled", "true");
+            //txtSDate2.Attributes.Add("disabled", "true");
+            //txtORNo2.Attributes.Add("disabled", "true");
+            txtPayDate.Attributes.Add("disabled", "true");
         }
         else
         {
             btnAdd.Visible = true;
             ddlRate.Attributes.Remove("disabled");
             txtORNo.Attributes.Remove("disabled");
+            txtSDate.Attributes.Remove("disabled");
+            //btnAddCurrent.Visible = true;
+            //ddlRate2.Attributes.Remove("disabled");
+            //txtSDate2.Attributes.Remove("disabled");
+            //txtORNo2.Attributes.Remove("disabled");
+            txtPayDate.Attributes.Remove("disabled");
         }
     }
 
@@ -192,12 +203,21 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
 
     private void GetMembershipStartUp()
     {
-        DateTime memSDate = Convert.ToDateTime(Helper.PHTime());
-
-        txtSDate.Text = memSDate.ToString("MMMM dd yyyy");
-        txtEDate.Text = memSDate.AddYears(1).ToString("MMMM dd yyyy");
+        if (txtSDate.Text != "")
+        {
+            txtEDate.Text = Convert.ToDateTime(txtSDate.Text).AddYears(1).ToString("MMMM dd yyyy");
+        }
 
         GetPrices();
+
+        if (ddlRate.SelectedValue == "Regular")
+        {
+            ltTotal.Text = _regRate.ToString("₱ #,###.00");
+        }
+        else
+        {
+            ltTotal.Text = _studRate.ToString("₱ #,###.00");
+        }
     }
 
     private void GetPrices()
@@ -212,17 +232,8 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
             {
                 while (dr.Read())
                 {
-                    RegRate = Convert.ToDecimal(dr["MemReg"]);
-                    StudRate = Convert.ToDecimal(dr["MemStud"]);
-
-                    if (ddlRate.SelectedValue == "Regular")
-                    {
-                        ltTotal.Text = RegRate.ToString("₱ #,###.00");
-                    }
-                    else
-                    {
-                        ltTotal.Text = StudRate.ToString("₱ #,###.00");
-                    }
+                    _regRate = Convert.ToDecimal(dr["MemReg"]);
+                    _studRate = Convert.ToDecimal(dr["MemStud"]);
                 }
             }
         }
@@ -230,9 +241,9 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
 
     protected void btnAdd_OnClick(object sender, EventArgs e)
     {
-        if (txtORNo2.Text != "")
+        if (txtORNo.Text != "")
         {
-            errorORNo2.Visible = false;
+            errorORNo.Visible = false;
 
             using (var con = new SqlConnection(Helper.GetCon()))
             using (var cmd = new SqlCommand())
@@ -247,8 +258,8 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
                                 SELECT TOP 1 MembershipID FROM Memberships 
                                 ORDER BY MembershipID DESC";
                 cmd.Parameters.AddWithValue("@userid", hfName.Value);
-                cmd.Parameters.AddWithValue("@memstart", Helper.PHTime());
-                cmd.Parameters.AddWithValue("@memend", Helper.PHTime().AddYears(1));
+                cmd.Parameters.AddWithValue("@memstart", txtSDate.Text);
+                cmd.Parameters.AddWithValue("@memend", Convert.ToDateTime(txtSDate.Text).AddYears(1));
                 cmd.Parameters.AddWithValue("@memspan", 1);
                 cmd.Parameters.AddWithValue("@memtype", ddlRate.SelectedValue);
                 cmd.Parameters.AddWithValue("@dateadded", Helper.PHTime());
@@ -257,11 +268,20 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
                 cmd.CommandText = @"INSERT INTO Payments
                                 (PaymentDate, MembershipID, Amount, ORNo)
                                 VALUES (@paydate, @memid, @amnt, @orno)";
-                cmd.Parameters.AddWithValue("@paydate", Helper.PHTime());
+
+                if (txtPayDate.Text != "")
+                {
+                    cmd.Parameters.AddWithValue("@paydate", txtPayDate.Text);
+                }
+                else
+                {
+                    cmd.Parameters.AddWithValue("@paydate", Helper.PHTime());
+                }
+
                 cmd.Parameters.AddWithValue("@memid", membershipID);
 
                 cmd.Parameters.AddWithValue("@amnt",
-                    ddlRate.SelectedValue == "Regular" ? RegRate : StudRate);
+                    ddlRate.SelectedValue == "Regular" ? _regRate : _studRate);
 
                 cmd.Parameters.AddWithValue("@orno", txtORNo.Text);
                 cmd.ExecuteNonQuery();
@@ -274,17 +294,65 @@ public partial class Admin_Membership_Add : System.Web.UI.Page
         }
         else
         {
-            errorORNo2.Visible = true;
+            errorORNo.Visible = true;
         }
     }
 
-    protected void btnAddCurrent_OnClick(object sender, EventArgs e)
-    {
-        
-    }
+    //protected void btnAddCurrent_OnClick(object sender, EventArgs e)
+    //{
+    //    if (txtORNo2.Text != "")
+    //    {
+    //        errorORNo2.Visible = false;
 
-    protected void ddlRate2_OnSelectedIndexChanged(object sender, EventArgs e)
+    //        using (var con = new SqlConnection(Helper.GetCon()))
+    //        using (var cmd = new SqlCommand())
+    //        {
+    //            con.Open();
+    //            cmd.Connection = con;
+    //            cmd.CommandText = @"INSERT INTO Memberships
+    //                            (UserID, MembershipStart, MembershipEnd,
+    //                            MembershipSpan, MembershipType, DateAdded)
+    //                            VALUES (@userid, @memstart, @memend, 
+    //                            @memspan, @memtype, @dateadded);
+    //                            SELECT TOP 1 MembershipID FROM Memberships 
+    //                            ORDER BY MembershipID DESC";
+    //            cmd.Parameters.AddWithValue("@userid", hfName.Value);
+    //            cmd.Parameters.AddWithValue("@memstart", txtSDate2.Text);
+    //            cmd.Parameters.AddWithValue("@memend", Convert.ToDateTime(txtSDate2.Text).AddYears(1).ToShortDateString());
+    //            cmd.Parameters.AddWithValue("@memspan", 1);
+    //            cmd.Parameters.AddWithValue("@memtype", ddlRate2.SelectedValue);
+    //            cmd.Parameters.AddWithValue("@dateadded", Helper.PHTime());
+    //            int membershipID = (int)cmd.ExecuteScalar();
+
+    //            cmd.CommandText = @"INSERT INTO Payments
+    //                            (PaymentDate, MembershipID, Amount, ORNo)
+    //                            VALUES (@paydate, @memid, @amnt, @orno)";
+    //            cmd.Parameters.AddWithValue("@paydate", txtPayDate.Text);
+    //            cmd.Parameters.AddWithValue("@memid", membershipID);
+
+    //            cmd.Parameters.AddWithValue("@amnt",
+    //                ddlRate2.SelectedValue == "Regular" ? _regRate : _studRate);
+
+    //            cmd.Parameters.AddWithValue("@orno", txtORNo2.Text);
+    //            cmd.ExecuteNonQuery();
+    //        }
+
+    //        Helper.Log("Add current Membership",
+    //            "Current membership added for " + txtLN.Text + ", " + txtFN.Text, "", Session["userid"].ToString());
+
+    //        CheckMembershipStatus();
+    //    }
+    //    else
+    //    {
+    //        errorORNo2.Visible = true;
+    //    }
+    //}
+
+    protected void txtSDate_OnTextChanged(object sender, EventArgs e)
     {
-        
+        if (txtSDate.Text != "")
+        {
+            txtEDate.Text = Convert.ToDateTime(txtSDate.Text).AddYears(1).ToShortDateString();
+        }
     }
 }

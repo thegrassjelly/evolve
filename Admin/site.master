@@ -152,6 +152,10 @@
                     <ul class="acc-menu">
                         <li><a href="<%= Page.ResolveUrl("~/Admin/Membership/Add.aspx") %>"><i class="fa fa-plus"></i>Add Memberships</a></li>
                         <li><a href="<%= Page.ResolveUrl("~/Admin/Membership/View.aspx") %>"><i class="fa fa-list"></i>View Memberships</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Subscription/Add.aspx") %>"><i class="fa fa-plus"></i>Add Subscriptions</a></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Subscription/View.aspx") %>"><i class="fa fa-list"></i>View Subscriptions</a></li>
+
                     </ul>
                 </li>
                 <li>

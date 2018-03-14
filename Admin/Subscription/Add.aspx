@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="Add.aspx.cs" Inherits="Admin_Membership_Add" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="Add.aspx.cs" Inherits="Admin_Subscription_Add" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    <i class="fa fa-plus"></i> Add Membership
+    <i class="fa fa-plus"></i> Add Subscription
     
     <script type='text/javascript' src='<%= Page.ResolveUrl("~/js/newjs/jquery.min.js") %>'></script>
     <script type='text/javascript' src='<%= Page.ResolveUrl("~/js/newjs/jquery-ui.min.js") %>'></script>
@@ -55,7 +55,6 @@
             });
         };
     </script>
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="Server">
     <form class="form-horizontal" runat="server">
@@ -65,23 +64,23 @@
                 <div class="col-lg-12">
                     <div class="panel panel-midnightblue">
                         <div class="panel-heading">
-                            Membership Details
+                            Subscription Details
                         </div>
                         <div class="panel-body">
-                            <div id="pnlMember" runat="server" visible="false">
+                            <div id="pnlSub" runat="server" visible="false">
                                 <div class="form-group">
                                     <label class="control-label col-lg-1 col-xs-12">Start Date</label>
                                     <div class="col-lg-2 col-xs-12">
                                         <asp:TextBox ID="txtStartDate" class="form-control" runat="server" disabled />
                                     </div>
-                                    <label class="control-label col-lg-2 col-xs-12">Membership Length</label>
+                                    <label class="control-label col-lg-2 col-xs-12">Subscription Length</label>
                                     <div class="col-lg-1 col-xs-12">
-                                        <asp:TextBox ID="txtMembershipLength" class="form-control text-center" runat="server" disabled />
+                                        <asp:TextBox ID="txtSubLength" class="form-control text-center" runat="server" disabled />
                                     </div>
-                                    <label class="col-lg-1 col-xs-12">Year</label>
-                                    <label class="control-label col-lg-2 col-xs-12">Membership Type</label>
+                                    <label class="col-lg-1 col-xs-12"></label>
+                                    <label class="control-label col-lg-2 col-xs-12">Subscription Type</label>
                                     <div class="col-lg-2 col-xs-12">
-                                        <asp:TextBox ID="txtMembershipType2" class="form-control text-center" runat="server" disabled />
+                                        <asp:TextBox ID="txtSubType2" class="form-control text-center" runat="server" disabled />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -95,20 +94,25 @@
                                             <b>Paid</b>
                                         </div>                                        
                                     </div>
-                                    <label class="control-label col-lg-2 col-xs-12">Membership Status</label>
+                                    <label class="control-label col-lg-2 col-xs-12">Subscription Status</label>
                                     <div class="col-lg-2 text-center">
-                                        <div id="memInactive" class="alert alert-danger" runat="server">
-                                            <b><asp:Literal ID="txtMembershipStatus" runat="server" /></b>
+                                        <div id="subInactive" class="alert alert-danger" runat="server">
+                                            <b><asp:Literal ID="txtSubStatus" runat="server" /></b>
                                         </div>            
-                                        <div id="memActive" class="alert alert-success" runat="server">
-                                            <b><asp:Literal ID="txtMembershipStatus2" runat="server" /></b>
+                                        <div id="SubActive" class="alert alert-success" runat="server">
+                                            <b><asp:Literal ID="txtSubStatus2" runat="server" /></b>
                                         </div>    
                                     </div>
                                 </div>
                             </div>
-                            <div id="pnlNonMember" runat="server" visible="false">
+                            <div id="pnlNonSub" runat="server" visible="false">
                                 <div class="alert alert-warning">
-                                    <b>No ongoing membership/Membership have expired</b>
+                                    <b>No ongoing subscription/subscription have expired</b>
+                                </div>
+                            </div>
+                            <div id="pnlCantSub" runat="server" visible="false">
+                                <div class="alert alert-warning">
+                                    <b>User is not eligible for monthly subscription</b>
                                 </div>
                             </div>
                         </div>
@@ -199,26 +203,39 @@
                 <div class="col-lg-6">
                     <div class="panel panel-midnightblue">
                         <div class="panel-heading">
-                            Add Membership
+                            Add Subscription
                         </div>
                         <div class="panel-body">
                             <div class="form-group">
                                 <label class="control-label col-lg-3">Rate</label>
                                 <div class="col-lg-3">
-                                 <asp:DropDownList id="ddlRate" class="form-control" runat="server"
-                                                   AutoPostBack="True" OnSelectedIndexChanged="ddlRate_OnSelectedIndexChanged">
-                                     <asp:ListItem>Regular</asp:ListItem>
-                                     <asp:ListItem>Student</asp:ListItem>
-                                 </asp:DropDownList>
+                                    <asp:DropDownList id="ddlRate" class="form-control" runat="server"
+                                                      AutoPostBack="True" OnSelectedIndexChanged="ddlRate_OnSelectedIndexChanged">
+                                        <asp:ListItem>Regular</asp:ListItem>
+                                        <asp:ListItem>Student</asp:ListItem>
+                                    </asp:DropDownList>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-lg-3">Subscription Duration</label>
+                                <div class="col-lg-3">
+                                    <asp:DropDownList id="ddlSubs" class="form-control" runat="server"
+                                                      AutoPostBack="True" OnSelectedIndexChanged="ddlSubs_OnSelectedIndexChanged">
+                                        <asp:ListItem Text="1 Month" Value="1" />
+                                        <asp:ListItem Text="3 Months" Value="3" />
+                                        <asp:ListItem Text="6 Months" Value="6" />
+                                        <asp:ListItem Text="1 Year" Value="12" />
+                                    </asp:DropDownList>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-lg-3">Start Date</label>
                                 <div class="col-lg-4">
                                     <div class="input-group date">
-                                        <asp:TextBox ID="txtSDate" class="form-control" 
-                                                     TextMode="date" runat="server" 
-                                                     AutoPostBack="True" OnTextChanged="txtSDate_OnTextChanged"/>
+                                        <asp:TextBox ID="txtSDate" class="form-control" runat="server"
+                                                     TextMode="date" 
+                                                     AutoPostBack="True" OnTextChanged="txtSDate_OnTextChanged" 
+                                                     required />
                                         <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                                     </div>
                                 </div>
@@ -238,16 +255,6 @@
                                     <button type="button" id="btnPriceLit" class="btn btn-success">
                                         <asp:Literal ID="ltTotal" runat="server" />
                                     </button>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-lg-3">Payment Date</label>
-                                <div class="col-lg-4">
-                                    <div class="input-group date">
-                                        <asp:TextBox ID="txtPayDate" class="form-control"
-                                                     TextMode="date" runat="server" />
-                                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

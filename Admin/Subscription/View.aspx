@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="View.aspx.cs" Inherits="Admin_Users_View" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="View.aspx.cs" Inherits="Admin_Subscription_View" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <i class="fa fa-list"></i> Users List
+    <i class="fa fa-list"></i> Subscription List
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" Runat="Server">
     <form class="form-horizontal" runat="server">
@@ -14,22 +14,20 @@
                             <div class="row">
                                 <div class="col-lg-1">
                                     <div class="input-group">
-                                        <asp:DropDownList ID="ddlStatus" runat="server" class="form-control"
-                                            AutoPostBack="True" OnSelectedIndexChanged="ddlStatus_OnSelectedIndexChanged">
-                                            <asp:ListItem Text="Active" Value="Active" />
-                                            <asp:ListItem Text="Inactive" Value="Inactive" />
+                                        <asp:DropDownList ID="ddlRate" runat="server" class="form-control"
+                                            AutoPostBack="True" OnSelectedIndexChanged="ddlRate_OnSelectedIndexChanged">
+                                            <asp:ListItem Text="All Users" />
+                                            <asp:ListItem Text="Regular" Value="Regular" />
+                                            <asp:ListItem Text="Student" Value="Student" />
                                         </asp:DropDownList>
                                     </div>
                                 </div>
                                 <div class="col-lg-1">
                                     <div class="input-group">
-                                        <asp:DropDownList ID="ddlType" runat="server" class="form-control"
-                                            AutoPostBack="True" OnSelectedIndexChanged="ddlType_OnSelectedIndexChanged">
-                                            <asp:ListItem Text="All Users" />
-                                            <asp:ListItem Text="Admin" Value="Admin" />
-                                            <asp:ListItem Text="Staff" Value="Staff" />
-                                            <asp:ListItem Text="Coach" Value="Coach" />
-                                            <asp:ListItem Text="Walk-in" Value="Walk-in" />
+                                        <asp:DropDownList ID="ddlStatus" runat="server" class="form-control"
+                                            AutoPostBack="True" OnSelectedIndexChanged="ddlStatus_OnSelectedIndexChanged">
+                                            <asp:ListItem Text="Active" />
+                                            <asp:ListItem Text="Inactive" Value="Inactive" />
                                         </asp:DropDownList>
                                     </div>
                                 </div>
@@ -50,36 +48,35 @@
                                 <thead>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th>Mobile No.</th>
-                                    <th>Birthday</th>
-                                    <th>User Type</th>
+                                    <th>Subscription Start</th>
+                                    <th>Subscription End</th>
+                                    <th>Subscription Length</th>
+                                    <th>Subscription Type</th>
                                     <th>Status</th>
-                                    <th>Date Added</th>
-                                    <th>Date Modified</th>
-                                    <th></th>
+                                    <th>OR No.</th>
+                                    <th>Payment Date</th>
                                 </thead>
                                 <tbody>
-                                    <asp:ListView ID="lvUsers" runat="server"
-                                        OnPagePropertiesChanging="lvUsers_OnPagePropertiesChanging"
-                                        OnDataBound="lvUsers_OnDataBound">
+                                    <asp:ListView ID="lvSubscriptions" runat="server"
+                                        OnPagePropertiesChanging="lvSubscriptions_OnPagePropertiesChanging"
+                                        OnDataBound="lvSubscriptions_OnDataBound">
                                         <ItemTemplate>
                                             <tr>
-                                                <td><%# Eval("UserID") %></td>
+                                                <td><%# Eval("SubID") %></td>
                                                 <td><%# Eval("LastName") %>, <%# Eval("FirstName") %> </td>
-                                                <td><%# Eval("MobileNo") %></td>
-                                                <td><%# Eval("Birthday", "{0: MMMM d, yyyy}") %></td>
-                                                <td><span class="label label-primary"><%# Eval("UserType") %></span></td>
+                                                <td><%# Eval("SubStart", "{0: MMMM d, yyyy}") %></td>
+                                                <td><%# Eval("SubEnd", "{0: MMMM d, yyyy}") %></td>
                                                 <td>
-                                                    <span class='<%# Eval("Status").ToString() == "Inactive" ? "label label-danger" : "label label-success"%>'>
-                                                        <%# Eval("Status") %>
+                                                    <%# Eval("SubSpan").ToString() == "12" ? Eval("SubSpan") + " Year" : Eval("SubSpan") + " Month(s)" %>
+                                                </td> 
+                                                <td><span class="label label-primary"><%# Eval("SubType") %></span></td>
+                                                <td>
+                                                    <span class='<%# Convert.ToDateTime(Eval("SubEnd")) < dateNow ? "label label-danger" : "label label-success"%>'>
+                                                        <%# Convert.ToDateTime(Eval("SubEnd")) < dateNow ? "Inactive" : "Active" %>
                                                     </span>
                                                 </td>
-                                                <td><%# Eval("DateAdded", "{0: dddd, MMMM d, yyyy}") %></td>
-                                                <td><%# Eval("DateModified", "{0: dddd, MMMM d, yyyy}") %></td>
-                                                <td>
-                                                    <a href='UpdateUsers.aspx?ID=<%# Eval("UserID") %>'>
-                                                        <asp:Label runat="server" ToolTip="Show Info"><i class="fa fa-edit"></i></asp:Label></a>
-                                                </td>
+                                                <td><%# Eval("ORNo") %></td>
+                                                <td><%# Eval("PaymentDate", "{0: dddd, MMMM d, yyyy}") %></td>
                                             </tr>
                                         </ItemTemplate>
                                         <EmptyDataTemplate>
@@ -95,7 +92,8 @@
                         </div>
                         <div class="panel-footer">
                             <center>
-                                        <asp:DataPager id="dpUsers" runat="server" pageSize="10" PagedControlID="lvUsers">
+                                        <asp:DataPager id="dpSubscriptions" runat="server" pageSize="10" 
+                                                       PagedControlID="lvSubscriptions">
                                             <Fields>
                                                 <asp:NumericPagerField Buttontype="Button"
                                                     NumericButtonCssClass="btn btn-default"
