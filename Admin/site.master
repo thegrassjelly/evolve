@@ -184,7 +184,7 @@
                 <li>
                     <a href="javascript:;"><i class="fa fa-cogs fa-lg"></i><span>Logs</span></a>
                     <ul class="acc-menu">
-                        <li><a href="<%= Page.ResolveUrl("~/Admin/Logs/ViewLogins.aspx") %>"><i class="fa fa-list"></i>User Logs</a></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Logs/View.aspx") %>"><i class="fa fa-list"></i>View Logs</a></li>
                     </ul>
                 </li>
             </ul>
