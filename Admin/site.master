@@ -161,8 +161,10 @@
                 <li>
                     <a href="javascript:;"><i class="fa fa-boxes fa-lg"></i><span>Inventory</span></a>
                     <ul class="acc-menu">
-                        <li><a href="<%= Page.ResolveUrl("~/Admin/Inventory/Add.aspx") %>"><i class="fa fa-plus"></i>Add Inventory</a></li>
-                        <li><a href="<%= Page.ResolveUrl("~/Admin/Inventory/View.aspx") %>"><i class="fa fa-list"></i>View Inventory</a></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Inventory/Add.aspx") %>"><i class="fa fa-plus"></i>Add Products</a></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Inventory/View.aspx") %>"><i class="fa fa-list"></i>View Products</a></li>
+                        <li class="divider"></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Inventory/UpdateInventory.aspx") %>"><i class="fa fa-plus"></i>Update Inventory</a></li>
                     </ul>
                 </li>
                 <li>

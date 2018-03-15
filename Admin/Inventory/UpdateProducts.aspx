@@ -1,7 +1,7 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="Add.aspx.cs" Inherits="Admin_Inventory_Add" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="UpdateProducts.aspx.cs" Inherits="Admin_Inventory_UpdateProducts" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" Runat="Server">
-    <i class="fa fa-plus"></i> Add Products
+    <i class="fa fa-edit"></i> Update Product Details
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" Runat="Server">
     <form class="form-horizontal" runat="server">
@@ -12,7 +12,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="col-lg-6">
-                         <div class="form-group">
+                        <div class="form-group">
                             <label class="control-label col-lg-3">Product Name</label>
                             <div class="col-lg-6">
                                 <asp:TextBox ID="txtProdName" class="form-control" runat="server" required />
@@ -39,7 +39,7 @@
                                 <div class="input-group">
                                     <span class="input-group-addon">₱</span>
                                     <asp:TextBox ID="txtPurPrice" class="form-control" runat="server" 
-                                                 Text="0" TextMode="number"/>
+                                                 TextMode="number"/>
                                 </div>
                             </div>
                         </div>
@@ -49,15 +49,8 @@
                                 <div class="input-group">
                                     <span class="input-group-addon">₱</span>
                                     <asp:TextBox ID="txtSellPrice" class="form-control" runat="server" 
-                                                 Text="0" TextMode="number" required/>
+                                                 TextMode="number" required/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-lg-3">Current Inventory</label>
-                            <div class="col-lg-6">
-                                <asp:TextBox ID="txtProdInvty" class="form-control" runat="server"
-                                             Text="0" TextMode="Number" />
                             </div>
                         </div>
                         <div class="form-group">
@@ -73,11 +66,13 @@
                 </div>
                 <div class="panel-footer">
                     <div class="pull-right">
-                        <asp:Button ID="btnSubmit" class="btn btn-success" runat="server" Text="Add" OnClick="btnSubmit_OnClick" />
+                        <asp:Button ID="btnBack" class="btn btn-primary" runat="server" Text="Back" OnClick="btnBack_OnClick" />
+                        <asp:Button ID="btnSubmit" class="btn btn-success" runat="server" Text="Update" OnClick="btnSubmit_OnClick" />
                     </div>
                 </div>
             </div>
         </div>
     </form>
+
 </asp:Content>
 

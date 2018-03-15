@@ -46,14 +46,15 @@ public partial class Admin_Inventory_Add : System.Web.UI.Page
             cmd.Connection = con;
             cmd.CommandText = @"INSERT INTO Products
                             (ProductName, ProductDescription, PurchasePrice, SellingPrice,
-                            ProdTypeID, DateAdded) VALUES
-                            (@prodname, @proddesc, @pprice, @sprice, @typeid, @dadded)
+                            ProdTypeID, Status, DateAdded) VALUES
+                            (@prodname, @proddesc, @pprice, @sprice, @typeid, @status, @dadded)
                             SELECT TOP 1 ProductID FROM Products ORDER BY ProductID DESC";
             cmd.Parameters.AddWithValue("@prodname", txtProdName.Text);
             cmd.Parameters.AddWithValue("@proddesc", txtProdDesc.Text);
             cmd.Parameters.AddWithValue("@pprice", txtPurPrice.Text);
             cmd.Parameters.AddWithValue("@sprice", txtSellPrice.Text);
             cmd.Parameters.AddWithValue("@typeid", ddlProdType.SelectedValue);
+            cmd.Parameters.AddWithValue("@status", ddlStatus.SelectedValue);
             cmd.Parameters.AddWithValue("@dadded", Helper.PHTime());
             int prodID = (int)cmd.ExecuteScalar();
 

@@ -55,7 +55,6 @@
             });
         };
     </script>
-
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="Server">
     <form class="form-horizontal" runat="server">
