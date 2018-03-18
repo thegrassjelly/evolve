@@ -159,6 +159,13 @@
                     </ul>
                 </li>
                 <li>
+                    <a href="javascript:;"><i class="fa fa-heartbeat fa-lg"></i><span>Client Coachings</span></a>
+                    <ul class="acc-menu">
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Training/Add.aspx") %>"><i class="fa fa-plus"></i>Add Coachings</a></li>
+                        <li><a href="<%= Page.ResolveUrl("~/Admin/Training/View.aspx") %>"><i class="fa fa-list"></i>View Coachings</a></li>
+                    </ul>
+                </li>
+                <li>
                     <a href="javascript:;"><i class="fa fa-id-card fa-lg"></i><span>Memberships</span></a>
                     <ul class="acc-menu">
                         <li><a href="<%= Page.ResolveUrl("~/Admin/Membership/Add.aspx") %>"><i class="fa fa-plus"></i>Add Memberships</a></li>
