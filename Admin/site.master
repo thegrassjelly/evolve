@@ -42,20 +42,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-xs-6 col-sm-2">
-                    <a href="<%# Page.ResolveUrl("~/Admin/Users/Add.aspx") %>" class="shortcut-tiles tiles-primary">
-                        <div class="tiles-body">
-                            <div class="pull-left"><i class="fa fa-plus"></i></div>
-                        </div>
-                        <div class="tiles-footer">
-                            Add Users
-                        </div>
-                    </a>
-                </div>
-                <div class="col-xs-6 col-sm-2">
                     <a href="<%# Page.ResolveUrl("~/Admin/Users/View.aspx") %>" class="shortcut-tiles tiles-inverse">
                         <div class="tiles-body">
                             <div class="pull-left"><i class="fa fa-users"></i></div>
-                            <div class="pull-right"><span class="badge">2</span></div>
+                            <div class="pull-right"><span class="badge"></span></div>
                         </div>
                         <div class="tiles-footer">
                             View Users
@@ -66,7 +56,7 @@
                     <a href="<%# Page.ResolveUrl("~/Admin/Membership/View.aspx") %>" class="shortcut-tiles tiles-midnightblue">
                         <div class="tiles-body">
                             <div class="pull-left"><i class="fa fa-id-card"></i></div>
-                            <div class="pull-right"><span class="badge">2</span></div>
+                            <div class="pull-right"><span class="badge"></span></div>
                         </div>
                         <div class="tiles-footer">
                             View Memberships
@@ -74,17 +64,38 @@
                     </a>
                 </div>
                 <div class="col-xs-6 col-sm-2">
-                    <a href="<%# Page.ResolveUrl("~/Admin/Payments/ViewPayments.aspx") %>" class="shortcut-tiles tiles-orange">
+                    <a href="<%# Page.ResolveUrl("~/Admin/Subscription/View.aspx") %>" class="shortcut-tiles tiles-sky">
                         <div class="tiles-body">
-                            <div class="pull-left"><i class="fa fa-credit-card"></i></div>
-                            <div class="pull-right"><span class="badge">2</span></div>
+                            <div class="pull-left"><i class="fa fa-id-card"></i></div>
+                            <div class="pull-right"><span class="badge"></span></div>
                         </div>
                         <div class="tiles-footer">
-                            View Payments
+                            View Subscription
                         </div>
                     </a>
                 </div>
-
+                <div class="col-xs-6 col-sm-2">
+                    <a href="<%# Page.ResolveUrl("~/Admin/Inventory/View.aspx") %>" class="shortcut-tiles tiles-orange">
+                        <div class="tiles-body">
+                            <div class="pull-left"><i class="fa fa-boxes"></i></div>
+                            <div class="pull-right"><span class="badge"></span></div>
+                        </div>
+                        <div class="tiles-footer">
+                            View Inventory
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-6 col-sm-2">
+                    <a href="<%# Page.ResolveUrl("~/Admin/Logs/View.aspx") %>" class="shortcut-tiles tiles-brown">
+                        <div class="tiles-body">
+                            <div class="pull-left"><i class="fa fa-gear"></i></div>
+                            <div class="pull-right"><span class="badge"></span></div>
+                        </div>
+                        <div class="tiles-footer">
+                            View Logs
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -170,14 +181,14 @@
                 <li>
                     <a href="javascript:;"><i class="fa fa-id-card fa-lg"></i><span>Payments</span></a>
                     <ul class="acc-menu">
-                        <li><a href="<%= Page.ResolveUrl("~/Admin/Payment/Add.aspx") %>"><i class="fa fa-plus"></i>Add Payment</a></li>
+<%--                        <li><a href="<%= Page.ResolveUrl("~/Admin/Payment/Add.aspx") %>"><i class="fa fa-plus"></i>Add Payment</a></li>--%>
                         <li><a href="<%= Page.ResolveUrl("~/Admin/Payment/View.aspx") %>"><i class="fa fa-list"></i>View Payment</a></li>
                     </ul>
                 </li>
                 <li>
                     <a href="javascript:;"><i class="fa fa-money-bill-alt fa-lg"></i><span>Expenses</span></a>
                     <ul class="acc-menu">
-                        <li><a href="<%= Page.ResolveUrl("~/Admin/Expenses/Add.aspx") %>"><i class="fa fa-plus"></i>Add Expenses</a></li>
+<%--                        <li><a href="<%= Page.ResolveUrl("~/Admin/Expenses/Add.aspx") %>"><i class="fa fa-plus"></i>Add Expenses</a></li>--%>
                         <li><a href="<%= Page.ResolveUrl("~/Admin/Expenses/View.aspx") %>"><i class="fa fa-list"></i>View Expenses</a></li>
                     </ul>
                 </li>
