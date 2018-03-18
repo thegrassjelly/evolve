@@ -79,17 +79,21 @@
                                 <tbody>
                                     <asp:ListView ID="lvCoaching" runat="server"
                                         OnPagePropertiesChanging="lvCoaching_OnPagePropertiesChanging"
-                                        OnDataBound="lvCoaching_OnDataBound">
+                                        OnDataBound="lvCoaching_OnDataBound"
+                                        OnItemCommand="lvCoaching_OnItemCommand">
                                         <ItemTemplate>
                                             <tr>
                                                 <td><%# Eval("DateAdded", "{0: MMMM d, yyyy}") %></td>
+                                                <asp:Literal ID="ltTrainID" runat="server" Text='<%# Eval("TrainingID") %>' Visible="false" />
                                                 <td><span class="label label-primary"><%# Eval("GoalSetting") %></span></td>
                                                 <td><%# Eval("CoachName") %></td>
                                                 <td><%# Eval("TrainingPackage") %></td>
                                                 <td><%# Eval("Weight") %> kg</td>
                                                 <td>
-                                                    <a href='UpdateCoaching.aspx?ID=<%# Eval("TrainingID") %>'>
-                                                        <asp:Label runat="server" ToolTip="Show Info"><i class="fa fa-edit"></i></asp:Label></a>
+                                                    <asp:Button ID="btnCoachingInfo" CommandName="coachingDetails"
+                                                                class="btn btn-sm btn-primary" runat="server" Text='View Coaching Details'
+                                                                OnSubmitBehavior="false" 
+                                                                formnovalidate />
                                                 </td>
                                             </tr>
                                         </ItemTemplate>
@@ -369,6 +373,162 @@
                 </div>
             </ContentTemplate>
         </asp:UpdatePanel>
+        <div id="coachingDetails" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Coaching Details</h4>
+                    </div>
+                    <div class="modal-body">
+                        <asp:UpdatePanel runat="server">
+                            <ContentTemplate>
+                                <div class="panel-body">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Coach Name</label>
+                                        <div class="col-lg-7">
+                                            <asp:TextBox ID="txtCoachName" class="form-control" runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Age</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtAge2" class="form-control"
+                                                runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Weight (kg)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtWght2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Height (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtHght2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Arms (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtArms2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Chest (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtChst2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Waist (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtWst2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Hip (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtHip2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Thigh (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtThgh2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Legs (cm)</label>
+                                        <div class="col-lg-3">
+                                            <asp:TextBox ID="txtLgs2" class="form-control"
+                                                         runat="server" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Fitness Goal</label>
+                                        <div class="col-lg-7">
+                                            <asp:TextBox ID="txtGoal" class="form-control" runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Coaching Package</label>
+                                        <div class="col-lg-7">
+                                            <asp:TextBox ID="txtPackage" class="form-control" runat="server" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Coaching Fee</label>
+                                        <div class="col-lg-5">
+                                            <asp:TextBox ID="txtCoachFee2" class="form-control"
+                                                disabled runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Time of record</label>
+                                        <div class="col-lg-7">
+                                            <asp:TextBox ID="txtTOR" class="form-control" runat="server"
+                                                disabled />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-5"><b>Training Schedule</b></label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Monday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkMon2" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Tuesday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkTue2" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Wednesday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkWed2" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Thursday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkThu2" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Friday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkFri2" runat="server" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3">Saturday</label>
+                                        <div class="col-lg-5">
+                                            <asp:CheckBox ID="chkSat2" runat="server" />
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </div>
+                </div>
+            </div>
+        </div>
     </form>
 </asp:Content>
 

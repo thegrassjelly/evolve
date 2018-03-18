@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.Services;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 
 public partial class Admin_Training_Add : System.Web.UI.Page
@@ -200,5 +201,60 @@ public partial class Admin_Training_Add : System.Web.UI.Page
     protected void btnBack_OnClick(object sender, EventArgs e)
     {
         Response.Redirect("View.aspx");
+    }
+
+    protected void lvCoaching_OnItemCommand(object sender, ListViewCommandEventArgs e)
+    {
+        Literal ltTrainID = (Literal)e.Item.FindControl("ltTrainID");
+
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT CoachName, Age, Weight, Height, Arms,
+                                Chest, Waist, Hip, Thigh, Legs, GoalSetting,
+                                TrainingPackage, TrainingFee, TrainingDetails.DateAdded,        
+                                Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+                                FROM Trainings
+                                INNER JOIN TrainingDetails
+                                ON Trainings.TrainingID = TrainingDetails.TrainingID
+                                WHERE Trainings.TrainingID = @id";
+            cmd.Parameters.AddWithValue("@id", ltTrainID.Text);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        txtCoachName.Text = dr["CoachName"].ToString();
+                        txtAge2.Text = dr["Age"].ToString();
+                        txtWght2.Text = dr["Weight"].ToString();
+                        txtHght2.Text = dr["Height"].ToString();
+                        txtArms2.Text = dr["Arms"].ToString();
+                        txtChst2.Text = dr["Chest"].ToString();
+                        txtWst2.Text = dr["Waist"].ToString();
+                        txtHip2.Text = dr["Hip"].ToString();
+                        txtThgh2.Text = dr["Thigh"].ToString();
+                        txtLgs2.Text = dr["Legs"].ToString();
+                        txtGoal.Text = dr["GoalSetting"].ToString();
+                        txtPackage.Text = dr["TrainingPackage"].ToString();
+                        txtCoachFee2.Text = decimal.Parse(dr["TrainingFee"].ToString()).ToString("c");
+
+                        DateTime dAdded = DateTime.Parse(dr["DateAdded"].ToString());
+                        txtTOR.Text = dAdded.ToString("MMMM dd, yyyy");
+
+                        chkMon2.Checked = dr["Monday"].ToString() == "1" ? true : false;
+                        chkTue2.Checked = dr["Tuesday"].ToString() == "1" ? true : false;
+                        chkWed2.Checked = dr["Wednesday"].ToString() == "1" ? true : false;
+                        chkThu2.Checked = dr["Thursday"].ToString() == "1" ? true : false;
+                        chkFri2.Checked = dr["Friday"].ToString() == "1" ? true : false;
+                        chkSat2.Checked = dr["Saturday"].ToString() == "1" ? true : false;
+                    }
+                }
+            }
+        }
+
+        ScriptManager.RegisterStartupScript(Page, Page.GetType(), "coachingDetails", "$('#coachingDetails').modal();", true);
     }
 }
