@@ -1,7 +1,59 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Admin/site.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="Admin_Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="Server">
-    Dashboard
+    <script type='text/javascript' src='<%= Page.ResolveUrl("~/js/newjs/jquery.min.js") %>'></script>
+    <script type='text/javascript' src='<%= Page.ResolveUrl("~/js/newjs/jquery-ui.min.js") %>'></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            SearchUser();
+        });
+        // if you use jQuery, you can load them when dom is read.
+        $(document).ready(function () {
+            var prm = Sys.WebForms.PageRequestManager.getInstance();
+            prm.add_initializeRequest(InitializeRequest);
+            prm.add_endRequest(EndRequest);
+
+        });
+
+        function InitializeRequest(sender, args) {
+        }
+
+        function EndRequest(sender, args) {
+            // after update occur on UpdatePanel re-init the Autocomplete
+            SearchUser();
+        }
+
+        function SearchUser() {
+            $(".autosuggest").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "Default.aspx/GetName",
+                        data: "{'prefixText':'" + request.term + "'}",
+                        dataType: "json",
+                        success: function (data) {
+                            response($.map(data.d, function (item) {
+                                return {
+                                    label: item.split('/vn/')[0],
+                                    val: item.split('/vn/')[1]
+                                }
+                            }))
+                        },
+                        error: function (result) {
+                            alert("Error");
+                        }
+                    });
+                },
+                select: function (e, i) {
+                    $("#<%=hfName.ClientID %>").val(i.item.val);
+                },
+                minLength: 2
+            });
+        };
+
+    </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="body" runat="Server">
     <form class="form-horizontal" runat="server">
@@ -9,7 +61,6 @@
         <div class="row">
             <asp:UpdatePanel runat="server">
                 <ContentTemplate>
-                    <asp:Timer ID="tmrDaily" runat="server" OnTick="tmrDaily_OnTick" Interval="1000" />
                     <div id="pnlDaily" class="row" runat="server">
                         <div class="panel panel-midnightblue">
                             <div class="panel panel-heading">
@@ -151,27 +202,107 @@
         </div>
         <asp:UpdatePanel runat="server">
             <ContentTemplate>
-                <div class="col-lg-6">
+                <div class="col-lg-12">
                     <div class="panel panel-midnightblue">
                         <div class="panel-heading">
-                            Check In
+                            Check In/Out
                         </div>
                         <div class="panel-body">
-
+                            <div id="errorCheckIn" runat="server" class="alert alert-warning" visible="false">
+                                <b>The customer is already checked-in</b>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <asp:TextBox ID="txtSearch" runat="server" class="form-control autosuggest"
+                                                     placeholder="Check-In Customer" required />
+                                        <span class="input-group-btn">
+                                            <asp:LinkButton ID="btnSearch" runat="server" class="btn btn-info"
+                                                            OnClick="btnSearch_OnClick">
+                                                <i class="fa fa-stopwatch"></i>
+                                            </asp:LinkButton>
+                                        </span>
+                                    </div>
+                                    <asp:HiddenField runat="server" Value="0" ID="hfName" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="input-group">
+                                        <asp:TextBox ID="txtSearchCust" runat="server" class="form-control"
+                                                     placeholder="Search Customer" AutoPostback="True"
+                                                     OnTextChanged="txtSearchCust_OnTextChanged" required />
+                                        <span class="input-group-btn">
+                                            <asp:LinkButton ID="btnSearchCust" runat="server" class="btn btn-info"
+                                                            OnClick="btnSearchCust_OnClick">
+                                                <i class="fa fa-search"></i>
+                                            </asp:LinkButton>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <th>Customer Name</th>
+                                    <th>Status</th>
+                                    <th>Check-In Time</th>
+                                    <th>Check-Out Time</th>
+                                    <th>Membership Status</th>
+                                    <th>Subscription Status</th>
+                                    <th>Check-Out Customer</th>
+                                </thead>
+                                <tbody>
+                                    <asp:ListView ID="lvOperations" runat="server"
+                                        OnPagePropertiesChanging="lvOperations_OnPagePropertiesChanging"
+                                        OnDataBound="lvOperations_OnDataBound">
+                                        <ItemTemplate>
+                                            <tr>
+                                                <td>
+                                                    <%# Eval("LastName") %>, <%# Eval("FirstName") %>
+                                                </td>
+                                                <td><%# Eval("CheckOut").ToString() != "" ? "Checked-Out" : "Checked-In" %></td>
+                                                <td><%# Eval("CheckIn") %></td>
+                                                <td><%# Eval("CheckOut") %></td>
+                                                <td>
+                                                    <span class='<%# Eval("MemStatus").ToString() == "Inactive" ? "label label-danger" : "label label-success"%>'>
+                                                        <%# Eval("MemStatus").ToString() == "Inactive" ? "Inactive" : "Active"%>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <span class='<%# Eval("SubStatus").ToString() == "Inactive" ? "label label-danger" : "label label-success"%>'>
+                                                        <%# Eval("SubStatus").ToString() == "Inactive" ? "No Active Subscriptions" 
+                                                                 : Eval("SubStart", "{0: MMMM d, yyyy}") + " - " + Eval("SubEnd", "{0: MMMM d, yyyy}") %>
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href='../Admin/CheckIn/CheckOut.aspx?ID=<%# Eval("OperationID") %>&&UserID=<%# Eval("UserID") %>'>
+                                                        <i class="fas fa-sign-out-alt"></i>
+                                                     </a>
+                                                </td>
+                                            </tr>
+                                        </ItemTemplate>
+                                        <EmptyDataTemplate>
+                                            <tr>
+                                                <td colspan="12">
+                                                    <h2 class="text-center">No Check-In's for today</h2>
+                                                </td>
+                                            </tr>
+                                        </EmptyDataTemplate>
+                                    </asp:ListView>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-            </ContentTemplate>
-        </asp:UpdatePanel>
-        <asp:UpdatePanel runat="server">
-            <ContentTemplate>
-                <div class="col-lg-6">
-                    <div class="panel panel-midnightblue">
-                        <div class="panel-heading">
-                            Check Out
+                        <div class="panel-footer">
+                            <center>
+                                        <asp:DataPager id="dpOperations" runat="server" pageSize="10" PagedControlID="lvOperations">
+                                            <Fields>
+                                                <asp:NumericPagerField Buttontype="Button"
+                                                    NumericButtonCssClass="btn btn-default"
+                                                    CurrentPageLabelCssClass="btn btn-success"
+                                                    NextPreviousButtonCssClass ="btn btn-default" 
+                                                    ButtonCount="10" />
+                                            </Fields>
+                                        </asp:DataPager>
+                                    </center>
                         </div>
-                        <div class="panel-body">
-
                         </div>
                     </div>
                 </div>

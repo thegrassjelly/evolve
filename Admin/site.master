@@ -40,7 +40,7 @@
 <body class=" ">
     <div id="headerbar">
         <div class="container">
-            <div class="row">
+<%--            <div class="row">
                 <div class="col-xs-6 col-sm-2">
                     <a href="<%# Page.ResolveUrl("~/Admin/Users/View.aspx") %>" class="shortcut-tiles tiles-inverse">
                         <div class="tiles-body">
@@ -96,7 +96,7 @@
                         </div>
                     </a>
                 </div>
-            </div>
+            </div>--%>
         </div>
     </div>
 
@@ -130,9 +130,9 @@
                     </li>
                 </ul>
             </li>
-            <li>
+<%--            <li>
                 <a href="#" id="headerbardropdown"><span><i class="fa fa-level-down-alt"></i></span></a>
-            </li>
+            </li>--%>
         </ul>
     </header>
 

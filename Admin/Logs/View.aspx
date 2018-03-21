@@ -49,7 +49,8 @@
                                                 <td><%# Eval("LogID") %></td>
                                                 <td><%# Eval("LogTitle") %></td>
                                                 <td><%# Eval("LogContent") %></td>
-                                                <td><%# Eval("LogType") %></td>                                                <td>
+                                                <td><%# Eval("LogType") %></td>                                                
+                                                <td>
                                                     <%# Eval("LastName") %>, <%# Eval("FirstName") %>
                                                 </td>
                                                 <td><%# Eval("LogDate", "{0: MMMM d, yyyy}") %></td>
