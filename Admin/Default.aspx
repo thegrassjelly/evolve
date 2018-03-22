@@ -229,7 +229,7 @@
                                     <div class="input-group">
                                         <asp:TextBox ID="txtSearchCust" runat="server" class="form-control"
                                                      placeholder="Search Customer" AutoPostback="True"
-                                                     OnTextChanged="txtSearchCust_OnTextChanged" required />
+                                                     OnTextChanged="txtSearchCust_OnTextChanged" />
                                         <span class="input-group-btn">
                                             <asp:LinkButton ID="btnSearchCust" runat="server" class="btn btn-info"
                                                             OnClick="btnSearchCust_OnClick">

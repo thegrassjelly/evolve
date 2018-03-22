@@ -106,7 +106,32 @@ public partial class Admin_Default : System.Web.UI.Page
 
     private void GetSalesWork()
     {
-        ltSalesWork.Text = "0";
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(PaidAmount) AS Amnt FROM Operations
+                WHERE CheckIn BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _dSDate);
+            cmd.Parameters.AddWithValue("@edate", _dEDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltSalesWork.Text = dr["Amnt"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Amnt"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltSalesWork.Text = "0";
+                }
+            }
+        }
     }
 
     private void GetSalesSubs()
@@ -439,7 +464,7 @@ public partial class Admin_Default : System.Web.UI.Page
                                 MemStatus LIKE @keyword OR
                                 SubStatus LIKE @keyword)
                                 AND CheckIn BETWEEN @dateone AND @datetwo
-                                ORDER BY CheckIN ASC";
+                                ORDER BY CheckIN DESC";
             DateTime now = Helper.PHTime();
             var startDate = new DateTime(now.Year, now.Month, now.Day);
             var endDate = startDate.AddDays(1).AddMinutes(-1);
