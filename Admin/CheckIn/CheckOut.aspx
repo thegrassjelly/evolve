@@ -88,7 +88,8 @@
                                                     <td><%# Eval("DateAdded", "{0: MMMM d, yyyy}") %></td>
                                                     <td>
                                                         <asp:Button ID="btnDelete" runat="server" Text="Delete" Class="btn btn-success"
-                                                            CommandName="delitem" ToolTip="Remove Item" UseSubmitBehavior="false"></asp:Button>
+                                                            CommandName="delitem" ToolTip="Remove Item" UseSubmitBehavior="false"
+                                                                    Visible='<%# _isCheckedOut %>' />
                                                     </td>
                                                 </tr>
                                             </ItemTemplate>
@@ -132,7 +133,8 @@
                                     <label class="control-label col-lg-3">Workout Fee</label>
                                     <div class="col-lg-3">
                                         <asp:TextBox ID="txtAmntPaid" runat="server" class="form-control" TextMode="Number"
-                                            AutoPostback="true" OnTextChanged="txtAmntPaid_OnTextChanged" />
+                                            AutoPostback="true" OnTextChanged="txtAmntPaid_OnTextChanged"
+                                                     Text="0.00" />
                                     </div>
                                 </div>
                                 <br />
@@ -141,6 +143,7 @@
                                                 <asp:Literal ID="ltConsumeTotal" runat="server" /></h4>
                                 <h4>Total Amount:
                                                 <asp:Literal ID="ltTotalAmnt" runat="server" /></h4>
+                                <asp:HiddenField ID="hfTotalAmnt" runat="server" />
                             </div>
                             <div class="pull-right">
                                 <asp:Button ID="btnCheckOut" runat="server" Visible="true" class="btn btn-success pull-right" Text="Check-Out"

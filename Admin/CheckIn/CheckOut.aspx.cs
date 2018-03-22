@@ -10,6 +10,7 @@ using System.Web.UI.WebControls;
 public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
 {
     private static decimal _TotalConsumable;
+    public static bool _isCheckedOut;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -28,8 +29,70 @@ public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
                 GetMemberRate();
                 ComputeTotalProds();
                 GetTotalAmount();
+                Hides();
             }
         }
+    }
+
+    private void Hides()
+    {
+        if (txtStatus.Text == "Checked-Out")
+        {
+            btnCheckOut.Visible = false;
+            btnAdd.Visible = false;
+
+            ddlProduct.Attributes.Add("disabled", "true");
+            txtQty.ReadOnly = true;
+            txtAmntPaid.ReadOnly = true;
+            _isCheckedOut = false;
+
+            GetAmountPaid();
+            GetTotalAmount();
+        }
+    }
+
+    private void GetAmountPaid()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT PaidAmount
+                                FROM Operations 
+                                WHERE OperationID = @id";
+            cmd.Parameters.AddWithValue("@id", Request.QueryString["ID"]);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (!dr.HasRows) return;
+                if (!dr.Read()) return;
+
+                decimal paidAmnt = decimal.Parse(dr["PaidAmount"].ToString());
+                txtAmntPaid.Text = (paidAmnt - _TotalConsumable).ToString();
+            }
+        }
+    }
+
+    bool isExist()
+    {
+        bool isExist = false;
+
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT ODID FROM OperationDetails
+                                WHERE ProductID = @id AND OperationsID = @opid";
+            cmd.Parameters.AddWithValue("@opid", Request.QueryString["ID"]);
+            cmd.Parameters.AddWithValue("@id", ddlProduct.SelectedValue);
+            using (var dr = cmd.ExecuteReader())
+            {
+                isExist = dr.HasRows;
+            }
+        }
+
+        return isExist;
     }
 
     private void GetOperations(int opId)
@@ -130,7 +193,7 @@ public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
                                 WHERE OperationsID = @id ORDER BY DateAdded DESC";
             cmd.Parameters.AddWithValue("@id", opID);
             SqlDataAdapter da = new SqlDataAdapter(cmd);
-            DataSet ds = new DataSet();
+            DataSet ds = new DataSet(); 
             con.Close();
             da.Fill(ds, "OperationDetails");
             lvCheckOut.DataSource = ds;
@@ -138,22 +201,103 @@ public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
         }
     }
 
+    private void ComputeTotalProds()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(TotalPrice) AS Tot
+                                FROM OperationDetails 
+                                WHERE OperationsID = @id";
+            cmd.Parameters.AddWithValue("@id", Request.QueryString["ID"]);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (!dr.HasRows) return;
+                if (!dr.Read()) return;
+
+                if (dr["Tot"].ToString() != "")
+                {
+                    _TotalConsumable = decimal.Parse(dr["Tot"].ToString());
+                    ltConsumeTotal.Text = _TotalConsumable.ToString("c");
+                }
+                else
+                {
+                    _TotalConsumable = 0;
+                    ltConsumeTotal.Text = "0.00";
+                }
+            }
+        }
+    }
+
+    private void GetTotalAmount()
+    {
+        if (txtAmntPaid.Text != "")
+        {
+            decimal paidAmnt;
+
+            if (decimal.TryParse(txtAmntPaid.Text, out paidAmnt))
+            {
+                ltTotalAmnt.Text = (paidAmnt + _TotalConsumable).ToString("c");
+                hfTotalAmnt.Value = (paidAmnt + _TotalConsumable).ToString();
+            }
+        }
+        else
+        {
+            txtAmntPaid.Text = "0.00";
+            hfTotalAmnt.Value = "0";
+        }
+
+    }
+
     protected void txtAmntPaid_OnTextChanged(object sender, EventArgs e)
     {
         GetTotalAmount();
     }
 
-    private void GetTotalAmount()
-    {
-        decimal paidAmnt;
-
-        decimal.TryParse(txtAmntPaid.Text, out paidAmnt);
-        ltTotalAmnt.Text = (paidAmnt + _TotalConsumable).ToString("c");
-    }
-
     protected void btnCheckOut_OnClick(object sender, EventArgs e)
     {
-        
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT ProductID, Qty
+                                FROM OperationDetails
+                                WHERE OperationsID = @id";
+            cmd.Parameters.AddWithValue("@id", Request.QueryString["ID"]);
+            DataTable dt = new DataTable();
+            dt.Load(cmd.ExecuteReader());
+            cmd.Parameters.Clear();
+
+            foreach (DataRow dr in dt.Rows)
+            {
+                int prodID = int.Parse(dr["ProductID"].ToString());
+                decimal qty = decimal.Parse(dr["Qty"].ToString());
+
+                cmd.CommandText = @"UPDATE ProductInventory
+                                  SET PIQty -= @qty, DateModified = @DateModified
+                                  WHERE ProductID = @pid";
+                cmd.Parameters.AddWithValue("@qty", qty);
+                cmd.Parameters.AddWithValue("@DateModified", Helper.PHTime());
+                cmd.Parameters.AddWithValue("@pid", prodID);
+                cmd.ExecuteNonQuery();
+                cmd.Parameters.Clear();
+            }
+
+            cmd.CommandText = @"UPDATE Operations
+                                SET CheckOut = @chkout,
+                                PaidAmount = @amnt
+                                WHERE OperationID = @id";
+            cmd.Parameters.AddWithValue("@id", Request.QueryString["ID"]);
+            cmd.Parameters.AddWithValue("@chkout", Helper.PHTime());
+            cmd.Parameters.AddWithValue("@amnt", hfTotalAmnt.Value);
+            cmd.ExecuteNonQuery();
+
+        }
+
+        Response.Redirect("~/Admin/Default.aspx");
     }
 
     protected void lvCheckOut_OnItemCommand(object sender, ListViewCommandEventArgs e)
@@ -219,50 +363,5 @@ public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
         GetTotalAmount();
     }
 
-    private void ComputeTotalProds()
-    {
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT SUM(TotalPrice) AS Tot
-                                FROM OperationDetails 
-                                WHERE OperationsID = @id";
-            cmd.Parameters.AddWithValue("@id", Request.QueryString["ID"]);
-            using (var dr = cmd.ExecuteReader())
-            {
-                if (!dr.HasRows) return;
-                if (!dr.Read()) return;
-
-                if (dr["Tot"].ToString() != "")
-                {
-                    _TotalConsumable = decimal.Parse(dr["Tot"].ToString());
-                    ltConsumeTotal.Text = _TotalConsumable.ToString("c");
-                }
-            }
-        }
-    }
-
-    bool isExist()
-    {
-        bool isExist = false;
-
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT ODID FROM OperationDetails
-                                WHERE ProductID = @id AND OperationsID = @opid";
-            cmd.Parameters.AddWithValue("@opid", Request.QueryString["ID"]);
-            cmd.Parameters.AddWithValue("@id", ddlProduct.SelectedValue);
-            using (var dr = cmd.ExecuteReader())
-            {
-                isExist = dr.HasRows;
-            }
-        }
-
-        return isExist;
-    }
+ 
 }
