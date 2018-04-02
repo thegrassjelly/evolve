@@ -135,7 +135,7 @@
                                 <h4>Daily Sales and Expenses</h4>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Users/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Membership/View.aspx">
                                     <div class="tiles-heading">Total Sales from Memberships</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -147,11 +147,11 @@
                             <asp:Literal ID="ltDailyS1" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to users</div>
+                                    <div class="tiles-footer">go to memberships</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Membership/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Subscription/View.aspx">
                                     <div class="tiles-heading">Total Sales from Subscriptions</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -163,11 +163,11 @@
                             <asp:Literal ID="ltDailyS2" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to memberships</div>
+                                    <div class="tiles-footer">go to subscriptions</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Subscription/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Operations/View.aspx">
                                     <div class="tiles-heading">Total Sales from Workouts</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -180,11 +180,11 @@
                             <asp:Literal ID="ltDailyS3" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to subscriptions</div>
+                                    <div class="tiles-footer">go to operations</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-magenta" href="../Admin/Logs/View.aspx">
+                                <a class="info-tiles tiles-magenta" href="../Admin/Expenses/View.aspx">
                                     <div class="tiles-heading">Total Expenses</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-level-down-alt"></i>
@@ -196,7 +196,7 @@
                             <asp:Literal ID="ltDailyS4" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to logs</div>
+                                    <div class="tiles-footer">go to expenses</div>
                                 </a>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                                 <h4>Monthly Sales and Expenses</h4>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Users/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Membership/View.aspx">
                                     <div class="tiles-heading">Total Sales from Memberships</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -220,11 +220,11 @@
                             <asp:Literal ID="ltMonth" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to users</div>
+                                    <div class="tiles-footer">go to memberships</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Membership/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Subscription/View.aspx">
                                     <div class="tiles-heading">Total Sales from Subscriptions</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -236,11 +236,11 @@
                             <asp:Literal ID="ltMonth2" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to memberships</div>
+                                    <div class="tiles-footer">go to subscriptions</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-green" href="../Admin/Subscription/View.aspx">
+                                <a class="info-tiles tiles-green" href="../Admin/Operations/View.aspx">
                                     <div class="tiles-heading">Total Sales from Workouts</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
@@ -253,11 +253,11 @@
                             <asp:Literal ID="ltMonth3" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to subscriptions</div>
+                                    <div class="tiles-footer">go to operations</div>
                                 </a>
                             </div>
                             <div class="col-md-3 col-xs-12 col-sm-6">
-                                <a class="info-tiles tiles-magenta" href="../Admin/Logs/View.aspx">
+                                <a class="info-tiles tiles-magenta" href="../Admin/Expenses/View.aspx">
                                     <div class="tiles-heading">Total Expenses</div>
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-level-down-alt"></i>
@@ -269,7 +269,7 @@
                             <asp:Literal ID="ltMonth4" runat="server" />
                                         </small>
                                     </div>
-                                    <div class="tiles-footer">go to logs</div>
+                                    <div class="tiles-footer">go to expenses</div>
                                 </a>
                             </div>
                         </div>
