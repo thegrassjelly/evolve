@@ -140,7 +140,8 @@
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
                                         <div class="text-center">
-                                            ₱ <asp:Literal ID="ltSalesMem" runat="server" />
+                                            ₱
+                                            <asp:Literal ID="ltSalesMem" runat="server" />
                                         </div>
                                         <small>For today
                             <asp:Literal ID="ltDailyS1" runat="server" />
@@ -155,7 +156,8 @@
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-money-bill-alt"></i>
                                         <div class="text-center">
-                                            ₱ <asp:Literal ID="ltSalesSub" runat="server" />
+                                            ₱
+                                            <asp:Literal ID="ltSalesSub" runat="server" />
                                         </div>
                                         <small>For today
                             <asp:Literal ID="ltDailyS2" runat="server" />
@@ -171,7 +173,8 @@
                                         <i class="fa fa-money-bill-alt"></i>
                                         <div class="text-center">
                                             <span class="text-top"></span>
-                                            ₱ <asp:Literal ID="ltSalesWork" runat="server" />
+                                            ₱
+                                            <asp:Literal ID="ltSalesWork" runat="server" />
                                         </div>
                                         <small>For today
                             <asp:Literal ID="ltDailyS3" runat="server" />
@@ -186,7 +189,8 @@
                                     <div class="tiles-body-alt">
                                         <i class="fa fa-level-down-alt"></i>
                                         <div class="text-center">
-                                            ₱ <asp:Literal ID="ltExp" runat="server" />
+                                            ₱
+                                            <asp:Literal ID="ltExp" runat="server" />
                                         </div>
                                         <small>For today
                             <asp:Literal ID="ltDailyS4" runat="server" />
@@ -197,6 +201,80 @@
                             </div>
                         </div>
                     </div>
+                    
+                                        <div id="Div1" class="row" runat="server">
+                        <div class="panel panel-midnightblue">
+                            <div class="panel panel-heading">
+                                <h4>Monthly Sales and Expenses</h4>
+                            </div>
+                            <div class="col-md-3 col-xs-12 col-sm-6">
+                                <a class="info-tiles tiles-green" href="../Admin/Users/View.aspx">
+                                    <div class="tiles-heading">Total Sales from Memberships</div>
+                                    <div class="tiles-body-alt">
+                                        <i class="fa fa-money-bill-alt"></i>
+                                        <div class="text-center">
+                                            ₱
+                                            <asp:Literal ID="ltMonthMem" runat="server" />
+                                        </div>
+                                        <small>For the Month of
+                            <asp:Literal ID="ltMonth" runat="server" />
+                                        </small>
+                                    </div>
+                                    <div class="tiles-footer">go to users</div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-xs-12 col-sm-6">
+                                <a class="info-tiles tiles-green" href="../Admin/Membership/View.aspx">
+                                    <div class="tiles-heading">Total Sales from Subscriptions</div>
+                                    <div class="tiles-body-alt">
+                                        <i class="fa fa-money-bill-alt"></i>
+                                        <div class="text-center">
+                                            ₱
+                                            <asp:Literal ID="ltMonthSub" runat="server" />
+                                        </div>
+                                        <small>For the Month of
+                            <asp:Literal ID="ltMonth2" runat="server" />
+                                        </small>
+                                    </div>
+                                    <div class="tiles-footer">go to memberships</div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-xs-12 col-sm-6">
+                                <a class="info-tiles tiles-green" href="../Admin/Subscription/View.aspx">
+                                    <div class="tiles-heading">Total Sales from Workouts</div>
+                                    <div class="tiles-body-alt">
+                                        <i class="fa fa-money-bill-alt"></i>
+                                        <div class="text-center">
+                                            <span class="text-top"></span>
+                                            ₱
+                                            <asp:Literal ID="ltMonthOp" runat="server" />
+                                        </div>
+                                        <small>For the Month of
+                            <asp:Literal ID="ltMonth3" runat="server" />
+                                        </small>
+                                    </div>
+                                    <div class="tiles-footer">go to subscriptions</div>
+                                </a>
+                            </div>
+                            <div class="col-md-3 col-xs-12 col-sm-6">
+                                <a class="info-tiles tiles-magenta" href="../Admin/Logs/View.aspx">
+                                    <div class="tiles-heading">Total Expenses</div>
+                                    <div class="tiles-body-alt">
+                                        <i class="fa fa-level-down-alt"></i>
+                                        <div class="text-center">
+                                            ₱
+                                            <asp:Literal ID="ltMonthExp" runat="server" />
+                                        </div>
+                                        <small>For the Month of
+                            <asp:Literal ID="ltMonth4" runat="server" />
+                                        </small>
+                                    </div>
+                                    <div class="tiles-footer">go to logs</div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
                 </ContentTemplate>
             </asp:UpdatePanel>
         </div>

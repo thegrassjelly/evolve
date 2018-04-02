@@ -44,11 +44,12 @@ public partial class Admin_Users_Add : System.Web.UI.Page
             con.Open();
             cmd.Connection = con;
             cmd.CommandText = @"INSERT INTO Users
-                            (FirstName, LastName, Birthday, EmailAddress,
+                            (FirstName, LastName, Password,  Birthday, EmailAddress,
                             MobileNo, Address, TypeID, Status, DateAdded) VALUES
-                            (@fn, @ln, @bday, @email, @mobile, @addr, @type, @status, @dadded)";
+                            (@fn, @ln, @passwd, @bday, @email, @mobile, @addr, @type, @status, @dadded)";
             cmd.Parameters.AddWithValue("@fn", txtFN.Text);
             cmd.Parameters.AddWithValue("@ln", txtLN.Text);
+            cmd.Parameters.AddWithValue("@passwd", Helper.CreateSHAHash(txtPassword.Text));
             cmd.Parameters.AddWithValue("@bday", txtBday.Text);
             cmd.Parameters.AddWithValue("@email", txtEmail.Text);
             cmd.Parameters.AddWithValue("@mobile", txtMNo.Text);

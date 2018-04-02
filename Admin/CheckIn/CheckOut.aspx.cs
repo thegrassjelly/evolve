@@ -49,6 +49,10 @@ public partial class Admin_CheckIn_CheckOut : System.Web.UI.Page
             GetAmountPaid();
             GetTotalAmount();
         }
+        else
+        {
+            _isCheckedOut = true;
+        }
     }
 
     private void GetAmountPaid()

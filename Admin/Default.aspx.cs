@@ -17,6 +17,8 @@ public partial class Admin_Default : System.Web.UI.Page
     static DateTime _SubStart;
     static DateTime _SubEnd;
     static string _OperationID;
+    static DateTime _sDate;
+    static DateTime _eDate;
 
     protected void Page_Load(object sender, EventArgs e)
     {
@@ -24,6 +26,7 @@ public partial class Admin_Default : System.Web.UI.Page
         if (!IsPostBack)
         {
             GetDaily();
+            GetMonthly();
 
             GetDailyUsers();
             GetDailyMembers();
@@ -34,6 +37,11 @@ public partial class Admin_Default : System.Web.UI.Page
             GetSalesSubs();
             GetSalesWork();
             GetExp();
+
+            GetMemMonthy();
+            GetSubsMonthly();
+            GetOpMonthly();
+            GetExpMonthly();
 
             GetCheckIns(txtSearchCust.Text);
             dateNow = Helper.PHTime();
@@ -74,127 +82,39 @@ public partial class Admin_Default : System.Web.UI.Page
         return name;
     }
 
-    private void GetExp()
+    private void GetDaily()
     {
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT SUM(Cost) AS Cost FROM Expenses
-                WHERE DateAdded BETWEEN @sdate AND @edate";
-            cmd.Parameters.AddWithValue("@sdate", _dSDate);
-            cmd.Parameters.AddWithValue("@edate", _dEDate);
-            using (var dr = cmd.ExecuteReader())
-            {
-                if (dr.HasRows)
-                {
-                    if (dr.Read())
-                    {
-                        ltExp.Text = dr["Cost"] != DBNull.Value
-                            ? Convert.ToDecimal(dr["Cost"]).ToString("##,###.00")
-                            : "0";
-                    }
-                }
-                else
-                {
-                    ltExp.Text = "0";
-                }
-            }
-        }
+        DateTime now = Helper.PHTime();
+        var startDate = new DateTime(now.Year, now.Month, now.Day);
+        var endDate = startDate.AddDays(1).AddMinutes(-1);
+
+        _dSDate = startDate.ToString(CultureInfo.InvariantCulture);
+        _dEDate = endDate.ToString(CultureInfo.InvariantCulture);
+
+        ltToday.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltToday2.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltToday3.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltToday4.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+
+        ltDailyS1.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltDailyS2.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltDailyS3.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+        ltDailyS4.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
     }
 
-    private void GetSalesWork()
+    private void GetMonthly()
     {
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT SUM(PaidAmount) AS Amnt FROM Operations
-                WHERE CheckIn BETWEEN @sdate AND @edate";
-            cmd.Parameters.AddWithValue("@sdate", _dSDate);
-            cmd.Parameters.AddWithValue("@edate", _dEDate);
-            using (var dr = cmd.ExecuteReader())
-            {
-                if (dr.HasRows)
-                {
-                    if (dr.Read())
-                    {
-                        ltSalesWork.Text = dr["Amnt"] != DBNull.Value
-                            ? Convert.ToDecimal(dr["Amnt"]).ToString("##,###.00")
-                            : "0";
-                    }
-                }
-                else
-                {
-                    ltSalesWork.Text = "0";
-                }
-            }
-        }
-    }
+        DateTime now = Helper.PHTime();
+        var startDate = new DateTime(now.Year, now.Month, 1);
+        var endDate = startDate.AddMonths(1).AddDays(-1);
 
-    private void GetSalesSubs()
-    {
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE SubID IS NOT NULL
-                                AND MembershipID IS NULL AND 
-                                PaymentDate BETWEEN @sdate AND @edate";
-            cmd.Parameters.AddWithValue("@sdate", _dSDate);
-            cmd.Parameters.AddWithValue("@edate", _dEDate);
-            using (var dr = cmd.ExecuteReader())
-            {
-                if (dr.HasRows)
-                {
-                    if (dr.Read())
-                    {
-                        ltSalesSub.Text = dr["Total"] != DBNull.Value
-                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
-                            : "0";
-                    }
-                }
-                else
-                {
-                    ltSalesSub.Text = "0";
-                }
-            }
-        }
-    }
+        _sDate = startDate;
+        _eDate = endDate;
 
-
-    private void GetSalesMem()
-    {
-        using (var con = new SqlConnection(Helper.GetCon()))
-        using (var cmd = new SqlCommand())
-        {
-            con.Open();
-            cmd.Connection = con;
-            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE MembershipID IS NOT NULL
-                                AND SubID IS NULL AND 
-                                PaymentDate BETWEEN @sdate AND @edate";
-            cmd.Parameters.AddWithValue("@sdate", _dSDate);
-            cmd.Parameters.AddWithValue("@edate", _dEDate);
-            using (var dr = cmd.ExecuteReader())
-            {
-                if (dr.HasRows)
-                {
-                    if (dr.Read())
-                    {
-                        ltSalesMem.Text = dr["Total"] != DBNull.Value
-                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
-                            : "0";
-                    }
-                }
-                else
-                {
-                    ltSalesMem.Text = "0";
-                }
-            }
-        }
+        ltMonth.Text = startDate.ToString("MMMM", CultureInfo.InvariantCulture);
+        ltMonth2.Text = startDate.ToString("MMMM", CultureInfo.InvariantCulture);
+        ltMonth3.Text = startDate.ToString("MMMM", CultureInfo.InvariantCulture);
+        ltMonth4.Text = startDate.ToString("MMMM", CultureInfo.InvariantCulture);
     }
 
     private void GetDailyLogs()
@@ -309,24 +229,248 @@ public partial class Admin_Default : System.Web.UI.Page
         }
     }
 
-    private void GetDaily()
+    private void GetExp()
     {
-        DateTime now = Helper.PHTime();
-        var startDate = new DateTime(now.Year, now.Month, now.Day);
-        var endDate = startDate.AddDays(1).AddMinutes(-1);
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Cost) AS Cost FROM Expenses
+                WHERE DateAdded BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _dSDate);
+            cmd.Parameters.AddWithValue("@edate", _dEDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltExp.Text = dr["Cost"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Cost"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltExp.Text = "0";
+                }
+            }
+        }
+    }
 
-        _dSDate = startDate.ToString(CultureInfo.InvariantCulture);
-        _dEDate = endDate.ToString(CultureInfo.InvariantCulture);
+    private void GetSalesWork()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(PaidAmount) AS Sales FROM Operations
+                WHERE CheckOut BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _dSDate);
+            cmd.Parameters.AddWithValue("@edate", _dEDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltSalesWork.Text = dr["Sales"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Sales"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltSalesWork.Text = "0";
+                }
+            }
+        }
+    }
 
-        ltToday.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltToday2.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltToday3.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltToday4.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+    private void GetSalesSubs()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE SubID IS NOT NULL
+                                AND MembershipID IS NULL AND 
+                                PaymentDate BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _dSDate);
+            cmd.Parameters.AddWithValue("@edate", _dEDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltSalesSub.Text = dr["Total"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltSalesSub.Text = "0";
+                }
+            }
+        }
+    }
 
-        ltDailyS1.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltDailyS2.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltDailyS3.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
-        ltDailyS4.Text = startDate.ToString("MMMM dd", CultureInfo.InvariantCulture);
+    private void GetSalesMem()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE SubID IS NULL
+                                AND MembershipID IS NOT NULL AND 
+                                PaymentDate BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _dSDate);
+            cmd.Parameters.AddWithValue("@edate", _dEDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltSalesMem.Text = dr["Total"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltSalesMem.Text = "0";
+                }
+            }
+        }
+    }
+
+    private void GetExpMonthly()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Cost) AS Cost FROM Expenses
+                WHERE DateAdded BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _sDate);
+            cmd.Parameters.AddWithValue("@edate", _eDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltMonthExp.Text = dr["Cost"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Cost"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltMonthExp.Text = "0";
+                }
+            }
+        }
+    }
+
+    private void GetOpMonthly()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(PaidAmount) AS Sales FROM Operations
+                WHERE CheckOut BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _sDate);
+            cmd.Parameters.AddWithValue("@edate", _eDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltMonthOp.Text = dr["Sales"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Sales"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltMonthOp.Text = "0";
+                }
+            }
+        }
+    }
+
+    private void GetSubsMonthly()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE SubID IS NOT NULL
+                                AND MembershipID IS NULL AND 
+                                PaymentDate BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _sDate);
+            cmd.Parameters.AddWithValue("@edate", _eDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltMonthSub.Text = dr["Total"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltMonthSub.Text = "0";
+                }
+            }
+        }
+    }
+
+    private void GetMemMonthy()
+    {
+        using (var con = new SqlConnection(Helper.GetCon()))
+        using (var cmd = new SqlCommand())
+        {
+            con.Open();
+            cmd.Connection = con;
+            cmd.CommandText = @"SELECT SUM(Amount) AS Total FROM Payments WHERE SubID IS NULL
+                                AND MembershipID IS NOT NULL AND 
+                                PaymentDate BETWEEN @sdate AND @edate";
+            cmd.Parameters.AddWithValue("@sdate", _sDate);
+            cmd.Parameters.AddWithValue("@edate", _eDate);
+            using (var dr = cmd.ExecuteReader())
+            {
+                if (dr.HasRows)
+                {
+                    if (dr.Read())
+                    {
+                        ltMonthMem.Text = dr["Total"] != DBNull.Value
+                            ? Convert.ToDecimal(dr["Total"]).ToString("##,###.00")
+                            : "0";
+                    }
+                }
+                else
+                {
+                    ltMonthMem.Text = "0";
+                }
+            }
+        }
     }
 
     protected void btnSearch_OnClick(object sender, EventArgs e)

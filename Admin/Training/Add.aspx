@@ -220,63 +220,63 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Age</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtAge" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Weight (kg)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtWeight" class="form-control"
                                                      TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Height (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtHeight" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Arms (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtArms" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Chest (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtChst" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Waist (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtWst" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Hip (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtHip" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Thigh (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtThgh" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label col-lg-3">Legs (cm)</label>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-4">
                                         <asp:TextBox ID="txtLgs" class="form-control"
                                             TextMode="number" runat="server" />
                                     </div>

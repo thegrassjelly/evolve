@@ -32,8 +32,8 @@ public partial class Admin_Login : System.Web.UI.Page
 
                 con.Open();
                 cmd.Connection = con;
-                cmd.CommandText = "SELECT UserID, TypeID FROM Users WHERE EmailAddress = @Email AND " +
-                                  "Password = @Password AND TypeID = '1'";
+                cmd.CommandText = @"SELECT UserID, TypeID FROM Users WHERE EmailAddress = @Email AND
+                                  Password = @Password AND TypeID = '1'";
                 cmd.Parameters.AddWithValue("@Email", txtEmail.Text);
                 cmd.Parameters.AddWithValue("@Password", Helper.CreateSHAHash(txtPassword.Text));
                 using (SqlDataReader data = cmd.ExecuteReader())
